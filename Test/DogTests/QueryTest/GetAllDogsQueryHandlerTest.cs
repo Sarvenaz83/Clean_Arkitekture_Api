@@ -1,6 +1,6 @@
 ﻿using Application.Queries.Dogs;
 using Application.Queries.Dogs.GetAll;
-using Domain.Models;
+using Domain.Models.Animal.DogModel;
 using Infrastructure.Database;
 
 namespace Test.DogTests.QueryTest

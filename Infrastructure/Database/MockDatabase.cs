@@ -1,4 +1,6 @@
-﻿using Domain.Models;
+﻿using Domain.Models.Animal.BirdModel;
+using Domain.Models.Animal.CatModel;
+using Domain.Models.Animal.DogModel;
 
 namespace Infrastructure.Database
 {

@@ -1,6 +1,6 @@
 ﻿using Domain.Models.Animal;
 
-namespace Domain.Models
+namespace Domain.Models.Animal.DogModel
 {
     public class Dog : AnimalModel
     {

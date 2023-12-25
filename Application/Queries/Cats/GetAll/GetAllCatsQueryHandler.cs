@@ -1,4 +1,4 @@
-﻿using Domain.Models;
+﻿using Domain.Models.Animal.CatModel;
 using Infrastructure.Database;
 using MediatR;
 

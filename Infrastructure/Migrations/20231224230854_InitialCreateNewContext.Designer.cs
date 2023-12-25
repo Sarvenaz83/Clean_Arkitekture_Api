@@ -4,6 +4,7 @@ using Infrastructure.Database.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(MyAppDbContext))]
-    partial class MyAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231224230854_InitialCreateNewContext")]
+    partial class InitialCreateNewContext
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,7 +41,7 @@ namespace Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("AnimalModel");
+                    b.ToTable("AnimalModels");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("AnimalModel");
 
@@ -121,7 +124,7 @@ namespace Infrastructure.Migrations
                     b.Property<int>("Weight")
                         .HasColumnType("int");
 
-                    b.ToTable("AnimalModel", t =>
+                    b.ToTable("AnimalModels", t =>
                         {
                             t.Property("Breed")
                                 .HasColumnName("Dog_Breed");

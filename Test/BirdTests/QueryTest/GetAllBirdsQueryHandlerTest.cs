@@ -1,5 +1,5 @@
 ﻿using Application.Queries.Birds.GetAll;
-using Domain.Models;
+using Domain.Models.Animal.BirdModel;
 using Infrastructure.Database;
 
 namespace Test.BirdTests.QueryTest

@@ -1,5 +1,5 @@
 ﻿using Application.Queries.Cats.GetAll;
-using Domain.Models;
+using Domain.Models.Animal.CatModel;
 using Infrastructure.Database;
 
 namespace Test.CatTests.QueryTest

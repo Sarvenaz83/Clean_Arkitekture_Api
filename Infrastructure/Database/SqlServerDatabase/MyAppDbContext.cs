@@ -1,6 +1,9 @@
 ﻿using Domain;
 using Domain.Models;
 using Domain.Models.Animal;
+using Domain.Models.Animal.BirdModel;
+using Domain.Models.Animal.CatModel;
+using Domain.Models.Animal.DogModel;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Database.Database
@@ -18,6 +21,7 @@ namespace Infrastructure.Database.Database
         public virtual DbSet<Cat> Cats { get; set; }
         public virtual DbSet<Bird> Birds { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<UserAnimal> UserAnimals { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer("Server=MINAZ\\SQLEXPRESS; Database=CleanArkitektureAPI; Trusted_Connection=true; TrustServerCertificate=true;");
@@ -25,6 +29,9 @@ namespace Infrastructure.Database.Database
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            //Set primary key for AnimalModel
+            modelBuilder.Entity<AnimalModel>().HasKey(animal => animal.Id);
 
             //Configuration many-to-many relationship
             modelBuilder.Entity<UserAnimal>().HasKey(_userAnimal => new { _userAnimal.UserId, _userAnimal.AnimalId });
@@ -38,6 +45,16 @@ namespace Infrastructure.Database.Database
                 .HasOne(_userAnimal => _userAnimal.Animal)
                 .WithMany(_animal => _animal.UserAnimals)
                 .HasForeignKey(_userAnimal => _userAnimal.AnimalId);
+
+            //Configure Dog entity
+            modelBuilder.Entity<Dog>()
+                .Property(dog => dog.Name);
+            modelBuilder.Entity<Dog>()
+                .Property(dog => dog.Breed);
+            modelBuilder.Entity<Dog>()
+                .Property(dog => dog.Weight);
+
+            //
 
 
         }
