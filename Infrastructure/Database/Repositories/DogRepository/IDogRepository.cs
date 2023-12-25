@@ -5,5 +5,6 @@ namespace Infrastructure.Database.Repositories.DogRepository
     public interface IDogRepository
     {
         Task<List<Dog>> GetAllDogsAsync();
+        Task<Dog?> GetDogByIdAsync(Guid id);
     }
 }

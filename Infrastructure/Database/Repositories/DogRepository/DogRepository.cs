@@ -15,5 +15,9 @@ namespace Infrastructure.Database.Repositories.DogRepository
         {
             return await _context.Dogs.ToListAsync();
         }
+        public async Task<Dog?> GetDogByIdAsync(Guid id)
+        {
+            return await _context.Dogs.FirstOrDefaultAsync(dog => dog.Id == id);
+        }
     }
 }
