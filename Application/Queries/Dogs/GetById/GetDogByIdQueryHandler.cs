@@ -1,5 +1,4 @@
 ﻿using Domain.Models.Animal.DogModel;
-using Infrastructure.Database;
 using Infrastructure.Database.Repositories.DogRepository;
 using MediatR;
 

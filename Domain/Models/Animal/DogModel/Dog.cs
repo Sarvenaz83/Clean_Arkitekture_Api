@@ -6,7 +6,7 @@ namespace Domain.Models.Animal.DogModel
     {
         public string Breed { get; set; } = string.Empty;
         public int Weight { get; set; }
-        public string Bark()
+        public static string Bark()
         {
             return "This animal barks";
 

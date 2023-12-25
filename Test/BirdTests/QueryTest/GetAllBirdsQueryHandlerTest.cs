@@ -1,34 +1,44 @@
 ﻿using Application.Queries.Birds.GetAll;
 using Domain.Models.Animal.BirdModel;
-using Infrastructure.Database;
+using Infrastructure.Database.Repositories.BirdRepository;
+using Moq;
 
 namespace Test.BirdTests.QueryTest
 {
     [TestFixture]
     public class GetAllBirdsQueryHandlerTest
     {
-        private MockDatabase _mockDatabase;
+        private Mock<IBirdRepository> _mockBirdRepository;
         private GetAllBirdsQueryHandler _handler;
 
         [SetUp]
         public void SetUp()
         {
-            _mockDatabase = new MockDatabase();
-            _handler = new GetAllBirdsQueryHandler(_mockDatabase);
+            _mockBirdRepository = new Mock<IBirdRepository>();
+            _handler = new GetAllBirdsQueryHandler(_mockBirdRepository.Object);
         }
 
         [Test]
-        public async Task Handle_GetAllBirds_FromDatabase_ReturnsCorrect()
+        public async Task Handle_ReturnsAllBirds()
         {
             //Arrange
-            var getAllBirdQuery = new GetAllBirdsQuery();
+            List<Bird> expectedBirds = new List<Bird>
+            {
+                new Bird { Id = Guid.NewGuid(), Name = "Fench" },
+                new Bird { Id = Guid.NewGuid(), Name = "Owl" },
+                new Bird { Id = Guid.NewGuid(), Name = "LittePitte" },
+                new Bird { Id = Guid.NewGuid(), Name = "LovlyBoy" },
+                new Bird { Id = Guid.NewGuid(), Name = "Tittu" },
+            };
+
+            _mockBirdRepository.Setup(repo => repo.GetAllBirdsAsync()).ReturnsAsync(expectedBirds);
+
 
             //Act
-            var result = await _handler.Handle(getAllBirdQuery, CancellationToken.None);
+            List<Bird> actualBirds = await _handler.Handle(new GetAllBirdsQuery(), CancellationToken.None);
 
             //Assert
-            Assert.IsNotNull(result);
-            Assert.IsInstanceOf<List<Bird>>(result);
+            Assert.That(actualBirds, Is.EqualTo(expectedBirds));
         }
     }
 }

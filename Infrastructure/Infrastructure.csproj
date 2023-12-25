@@ -27,9 +27,4 @@
     <ProjectReference Include="..\Domain\Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Database\Repositories\CatRepository\" />
-    <Folder Include="Database\Repositories\BirdRepository\" />
-  </ItemGroup>
-
 </Project>

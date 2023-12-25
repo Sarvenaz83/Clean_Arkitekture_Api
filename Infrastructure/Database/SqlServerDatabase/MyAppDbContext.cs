@@ -54,7 +54,23 @@ namespace Infrastructure.Database.Database
             modelBuilder.Entity<Dog>()
                 .Property(dog => dog.Weight);
 
-            //
+            //Configure Bird entity
+            modelBuilder.Entity<Bird>()
+                .Property(bird => bird.Name);
+            modelBuilder.Entity<Bird>()
+                .Property(bird => bird.Color);
+            modelBuilder.Entity<Bird>()
+                .Property(bird => bird.CanFly);
+
+            //Configure Cat entity
+            modelBuilder.Entity<Cat>()
+                .Property(cat => cat.Name);
+            modelBuilder.Entity<Cat>()
+                .Property(cat => cat.LikesToPlay);
+            modelBuilder.Entity<Cat>()
+                .Property(cat => cat.Breed);
+            modelBuilder.Entity<Cat>()
+                .Property(cat => cat.Weight);
 
 
         }

@@ -1,36 +1,49 @@
 ﻿using Application.Queries.Cats.GetById;
-using Application.Queries.Dogs.GetById;
-using Infrastructure.Database;
+using Domain.Models.Animal.CatModel;
+using Infrastructure.Database.Repositories.CatRepository;
+using Moq;
 
 namespace Test.CatTests.QueryTest
 {
     [TestFixture]
     public class GetCatByIdQueryHandlerTest
     {
+        private Mock<ICatRepository> _mockCatRepository;
         private GetCatByIdQueryHandler _handler;
-        private MockDatabase _mockDatabase;
 
         [SetUp]
         public void SetUp()
         {
             // Initialize the handler and mock database before each test
-            _mockDatabase = new MockDatabase();
-            _handler = new GetCatByIdQueryHandler(_mockDatabase);
+            _mockCatRepository = new Mock<ICatRepository>();
+            _handler = new GetCatByIdQueryHandler(_mockCatRepository.Object);
         }
         [Test]
-        public async Task Handle_ValidId_ReturnsCorrectCat()
+        public async Task Handle_ReturnsCat_WhenCatExists()
         {
             // Arrange
-            var catId = new Guid("09876543-1234-0987-6543-098765432109");
+            Guid catId = Guid.NewGuid();
+            Cat expectedCat = new Cat { Id = catId, Name = "TestCat" };
 
-            var query = new GetCatByIdQuery(catId);
+            _mockCatRepository.Setup(catRepository => catRepository.GetCatByIdAsync(catId)).ReturnsAsync(expectedCat);
 
-            // Act
-            var result = await _handler.Handle(query, CancellationToken.None);
+            // Act 
+            Cat actualCat = await _handler.Handle(new GetCatByIdQuery(catId), CancellationToken.None);
 
-            // Assert
-            Assert.NotNull(result);
-            Assert.That(result.Id, Is.EqualTo(catId));
+            //Assert
+            Assert.That(actualCat, Is.EqualTo(expectedCat));
+        }
+
+        [Test]
+        public void Handle_ThrowsKeyNotFoundException_WhenCatDoesNotExist()
+        {
+            // Arrange
+            Guid catId = Guid.NewGuid();
+
+            _mockCatRepository.Setup(catRepository => catRepository.GetCatByIdAsync(catId)).ReturnsAsync((Cat?)null);
+
+            // Act & Assert
+            Assert.ThrowsAsync<KeyNotFoundException>(() => _handler.Handle(new GetCatByIdQuery(catId), CancellationToken.None));
         }
 
     }
