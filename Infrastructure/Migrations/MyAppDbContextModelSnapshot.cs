@@ -57,7 +57,7 @@ namespace Infrastructure.Migrations
 
                     b.HasIndex("AnimalId");
 
-                    b.ToTable("UserAnimal");
+                    b.ToTable("UserAnimals");
                 });
 
             modelBuilder.Entity("Domain.User", b =>
@@ -79,7 +79,7 @@ namespace Infrastructure.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Domain.Models.Bird", b =>
+            modelBuilder.Entity("Domain.Models.Animal.BirdModel.Bird", b =>
                 {
                     b.HasBaseType("Domain.Models.Animal.AnimalModel");
 
@@ -93,7 +93,7 @@ namespace Infrastructure.Migrations
                     b.HasDiscriminator().HasValue("Bird");
                 });
 
-            modelBuilder.Entity("Domain.Models.Cat", b =>
+            modelBuilder.Entity("Domain.Models.Animal.CatModel.Cat", b =>
                 {
                     b.HasBaseType("Domain.Models.Animal.AnimalModel");
 
@@ -110,7 +110,7 @@ namespace Infrastructure.Migrations
                     b.HasDiscriminator().HasValue("Cat");
                 });
 
-            modelBuilder.Entity("Domain.Models.Dog", b =>
+            modelBuilder.Entity("Domain.Models.Animal.DogModel.Dog", b =>
                 {
                     b.HasBaseType("Domain.Models.Animal.AnimalModel");
 

@@ -1,35 +1,44 @@
 ﻿using Application.Queries.Dogs;
 using Application.Queries.Dogs.GetAll;
-using Domain.Models;
-using Infrastructure.Database;
+using Domain.Models.Animal.DogModel;
+using Infrastructure.Database.Repositories.DogRepository;
+using Moq;
 
 namespace Test.DogTests.QueryTest
 {
     [TestFixture]
     public class GetAllDogsQueryHandlerTest
     {
-        private MockDatabase _mockDatabase;
-        private GetAllDogsQueryHandler _handler;
+        private Mock<IDogRepository>? _mockDogRepository;
+        private GetAllDogsQueryHandler? _handler;
 
         [SetUp]
         public void SetUp()
         {
-            _mockDatabase = new MockDatabase();
-            _handler = new GetAllDogsQueryHandler(_mockDatabase);
+            _mockDogRepository = new Mock<IDogRepository>();
+            _handler = new GetAllDogsQueryHandler(_mockDogRepository.Object);
         }
 
         [Test]
-        public async Task Handle_GetAllDogs_FromDatabase_ReturnsCorrect()
+        public async Task Handle_ReturnsAllDogs()
         {
             //Arrange
-            var getAllDogQuery = new GetAllDogsQuery();
+            List<Dog> expectedDogs = new List<Dog>
+            {
+                new Dog { Id = Guid.NewGuid(), Name = "Nonika" },
+                new Dog { Id = Guid.NewGuid(), Name = "Mandy" },
+                new Dog { Id = Guid.NewGuid(), Name = "Alex" },
+                new Dog { Id = Guid.NewGuid(), Name = "Pettibell" },
+                new Dog { Id = Guid.NewGuid(), Name = "Oscar" },
+            };
+
+            _mockDogRepository!.Setup(repo => repo.GetAllDogsAsync()).ReturnsAsync(expectedDogs);
 
             //Act
-            var result = await _handler.Handle(getAllDogQuery, CancellationToken.None);
+            List<Dog> actualDogs = await _handler!.Handle(new GetAllDogsQuery(), CancellationToken.None);
 
             //Assert
-            Assert.IsNotNull(result);
-            Assert.IsInstanceOf<List<Dog>>(result);
+            Assert.That(actualDogs, Is.EqualTo(expectedDogs));
         }
     }
 }

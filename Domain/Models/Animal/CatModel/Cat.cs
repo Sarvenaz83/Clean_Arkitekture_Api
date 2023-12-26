@@ -1,6 +1,4 @@
-﻿using Domain.Models.Animal;
-
-namespace Domain.Models
+﻿namespace Domain.Models.Animal.CatModel
 {
     public class Cat : AnimalModel
     {

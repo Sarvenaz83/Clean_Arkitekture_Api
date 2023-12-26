@@ -1,37 +1,63 @@
 ﻿using Application.Commands.Dogs.UpdateDog;
+using Application.Dtos;
 using Domain.Models;
+using Domain.Models.Animal.DogModel;
 using Infrastructure.Database;
+using Infrastructure.Database.Repositories.DogRepository;
+using Moq;
 
 namespace Test.DogTests.CommandTest
 {
     [TestFixture]
     public class UpdateDogByIdCommandHandlerTest
     {
-        private UpdateDogByIdCommandHandler _handler;
-        private MockDatabase _mockDatabase;
+        private UpdateDogByIdCommandHandler? _handler;
+        private Mock<IDogRepository>? _dogRepositoryMock;
         [SetUp]
         public void SetUp()
         {
-            _mockDatabase = new MockDatabase();
-            _handler = new UpdateDogByIdCommandHandler(_mockDatabase);
+            _dogRepositoryMock = new Mock<IDogRepository>();
+            _handler = new UpdateDogByIdCommandHandler(_dogRepositoryMock.Object);
         }
 
         [Test]
         public async Task Handle_UpdateDogByIdInDatabase()
         {
             //Arrange
-            var newDog = new Dog { Id = Guid.NewGuid(), Name = "UpdateDogName" };
-            _mockDatabase.Dogs.Add(newDog);
+            var dogId = Guid.NewGuid();
+            var dogToUpdate = new Dog { Id = dogId, Name = "Test", Breed = "TestBreed", Weight = 6 };
+            var updatedDogDto = new DogDto { Name = "Updated", Breed = "UpdatedBreed", Weight = 10 };
 
-            //Create a sample
-            var updateDogCommand = new UpdateDogByIdCommand(updatedDog: new Application.Dtos.DogDto { Name = "UpdatedDogName" }, id: newDog.Id);
+            var command = new UpdateDogByIdCommand(updatedDogDto, dogId);
+            _dogRepositoryMock!.Setup(repo => repo.GetDogByIdAsync(dogId)).ReturnsAsync(dogToUpdate);
+            _dogRepositoryMock!.Setup(repo => repo.UpdateDogByIdAsync(dogId)).ReturnsAsync(dogToUpdate);
+
 
             //Act
-            var result = await _handler.Handle(updateDogCommand, CancellationToken.None);
+            var result = await _handler!.Handle(command, CancellationToken.None);
 
             //Assert
-            Assert.NotNull(result);
-            Assert.That(result, Is.Not.Null);
+            _dogRepositoryMock.Verify(repo => repo.GetDogByIdAsync(dogId), Times.Once);
+            _dogRepositoryMock.Verify(repo => repo.UpdateDogByIdAsync(dogId), Times.Once);
+            Assert.That(result, Is.EqualTo(dogToUpdate));
+
+        }
+        [Test]
+        public async Task Handle_WhenNotExist_ShouldThrowException()
+        {
+            //Arrange
+            var dogId = Guid.NewGuid();
+            var updatedDogDto = new DogDto { Name = "Updated", Breed = "UpdatedBreed", Weight = 10 };
+            var command = new UpdateDogByIdCommand(updatedDogDto, dogId);
+            _dogRepositoryMock!.Setup(repo => repo.GetDogByIdAsync(dogId)).ReturnsAsync((Dog?)null);
+
+            //Act
+            var result = await _handler!.Handle(command, CancellationToken.None);
+
+            //Assert
+            _dogRepositoryMock.Verify(repo => repo.GetDogByIdAsync(dogId), Times.Once);
+            _dogRepositoryMock.Verify(repo => repo.UpdateDogByIdAsync(dogId), Times.Never);
+            Assert.That(result, Is.Null);
         }
     }
 

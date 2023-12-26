@@ -3,6 +3,7 @@ using Application.Commands.Birds.DeleteBird;
 using Application.Commands.Birds.UpdateBird;
 using Application.Dtos;
 using Application.Queries.Birds.GetAll;
+using Application.Queries.Birds.GetByColor;
 using Application.Queries.Birds.GetById;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -25,7 +26,14 @@ namespace API.Controllers.BirdsCntroller
         public async Task<IActionResult> GetAllBirds()
         {
             //return Ok("GET ALL BIRDS");
-            return Ok(await _mediator.Send(new GetAllBirdsQuery()));
+            try
+            {
+                return Ok(await _mediator.Send(new GetAllBirdsQuery()));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         //Get a bird by Id
@@ -33,7 +41,14 @@ namespace API.Controllers.BirdsCntroller
         [Route("getBirdById/{birdId}")]
         public async Task<IActionResult> GetBirdById(Guid birdId)
         {
-            return Ok(await _mediator.Send(new GetBirdByIdQuery(birdId)));
+            try
+            {
+                return Ok(await _mediator.Send(new GetBirdByIdQuery(birdId)));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         //Create a new bird
@@ -41,7 +56,14 @@ namespace API.Controllers.BirdsCntroller
         [Route("addNewBird")]
         public async Task<IActionResult> AddBird([FromBody] BirdDto newBird)
         {
-            return Ok(await _mediator.Send(new AddBirdCommand(newBird)));
+            try
+            {
+                return Ok(await _mediator.Send(new AddBirdCommand(newBird)));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         //Update a specific Bird
@@ -49,7 +71,14 @@ namespace API.Controllers.BirdsCntroller
         [Route("updateBird/{updatedBirdId}")]
         public async Task<IActionResult> UpdateBird([FromBody] BirdDto updatedBird, Guid updatedBirdId)
         {
-            return Ok(await _mediator.Send(new UpdateBirdByIdCommand(updatedBird, updatedBirdId)));
+            try
+            {
+                return Ok(await _mediator.Send(new UpdateBirdByIdCommand(updatedBirdId, updatedBird)));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         //Delete a bird by Id
@@ -57,7 +86,28 @@ namespace API.Controllers.BirdsCntroller
         [Route("deleteBird/{deleteBirdById}")]
         public async Task<IActionResult> DeleteBird(Guid birdId)
         {
-            return Ok(await _mediator.Send(new DeleteBirdByIdCommand(birdId)));
+            try
+            {
+                return Ok(await _mediator.Send(new DeleteBirdByIdCommand(birdId)));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+        //Get all birds by color
+        [HttpGet]
+        [Route("getBirdsByColor/{color}")]
+        public async Task<IActionResult> GetBirdsByColor(string color)
+        {
+            try
+            {
+                return Ok(await _mediator.Send(new GetBirdsByColorQuery(color)));
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

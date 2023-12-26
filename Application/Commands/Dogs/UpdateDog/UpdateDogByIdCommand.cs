@@ -1,5 +1,5 @@
 ﻿using Application.Dtos;
-using Domain.Models;
+using Domain.Models.Animal.DogModel;
 using MediatR;
 
 namespace Application.Commands.Dogs.UpdateDog
@@ -12,7 +12,7 @@ namespace Application.Commands.Dogs.UpdateDog
             Id = id;
         }
 
-        public DogDto UpdatedDog { get; }
+        public DogDto UpdatedDog { get; set; }
         public Guid Id { get; }
     }
 }

@@ -1,23 +1,28 @@
-﻿using Domain.Models;
+﻿using Domain.Models.Animal.CatModel;
 using Infrastructure.Database;
+using Infrastructure.Database.Repositories.CatRepository;
 using MediatR;
 
 namespace Application.Commands.Cats.UpdateCat
 {
     public class UpdateCatByIdCommandHandler : IRequestHandler<UpdateCatByIdCommand, Cat>
     {
-        private readonly MockDatabase _mockDatabase;
+        private readonly ICatRepository _catRepository;
 
-        public UpdateCatByIdCommandHandler(MockDatabase mockDatabase)
+        public UpdateCatByIdCommandHandler(ICatRepository catRepository)
         {
-            _mockDatabase = mockDatabase;
+            _catRepository = catRepository ?? throw new ArgumentNullException(nameof(catRepository));
         }
 
-        public Task<Cat> Handle(UpdateCatByIdCommand request, CancellationToken cancellationToken)
+        public async Task<Cat> Handle(UpdateCatByIdCommand request, CancellationToken cancellationToken)
         {
-            Cat catToUpdate = _mockDatabase.Cats.FirstOrDefault(cat => cat.Id == request.Id)!;
-            catToUpdate.Name = request.UpdatedCat.Name;
-            return Task.FromResult(catToUpdate);
+            var catToUpdate = await _catRepository!.GetCatByIdAsync(request.Id);
+            if (catToUpdate != null)
+            {
+                await _catRepository!.UpdateCatByIdAsync(request.Id);
+                return catToUpdate;
+            }
+            return null!;
         }
     }
 }

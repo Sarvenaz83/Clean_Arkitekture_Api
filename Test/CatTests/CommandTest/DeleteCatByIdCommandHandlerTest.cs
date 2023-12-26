@@ -1,42 +1,60 @@
 ﻿using Application.Commands.Cats.DeleteCat;
-using Application.Commands.Dogs.DeleteDog;
-using Domain.Models;
-using Infrastructure.Database;
+using Application.Queries.Cats.GetCatsByBreed;
+using Domain.Models.Animal.CatModel;
+using Infrastructure.Database.Repositories.CatRepository;
+using Moq;
 
 namespace Test.CatTests.CommandTest
 {
     [TestFixture]
     public class DeleteCatByIdCommandHandlerTest
     {
-        private DeleteCatByIdCommandHandler _handler;
-        private MockDatabase _mockDatabase;
+        private DeleteCatByIdCommandHandler? _handler;
+        private Mock<ICatRepository>? _catRepositoryMock;
 
         [SetUp]
         public void SetUp()
         {
-            _mockDatabase = new MockDatabase();
-            _handler = new DeleteCatByIdCommandHandler(_mockDatabase);
+            _catRepositoryMock = new Mock<ICatRepository>();
+            _handler = new DeleteCatByIdCommandHandler(_catRepositoryMock.Object);
         }
 
         [Test]
-        public async Task Handle_DeleteCatById_InDatabase()
+        public async Task Handle_ShouldDeleteCat()
         {
-            //Arrange
-            var newCat = new Cat { Id = Guid.NewGuid() };
-            _mockDatabase.Cats.Add(newCat);
+            // Arrange
+            var catId = Guid.NewGuid();
+            var catToDelete = new Cat { Id = catId, Name = "Test", LikesToPlay = true, Breed = "TestBreed", Weight = 10 };
+            var command = new DeleteCatByIdCommand(catId);
 
-            //Create a sample of DleteCatByIdCommand
-            var deleteCatByIdCommand = new DeleteCatByIdCommand(catId: newCat.Id);
+            _catRepositoryMock!.Setup(repo => repo.GetCatByIdAsync(catId)).ReturnsAsync(catToDelete);
+            _catRepositoryMock!.Setup(repo => repo.DeleteCatByIdAsync(catId)).ReturnsAsync(catToDelete);
 
-            //Act
-            var result = await _handler.Handle(deleteCatByIdCommand, CancellationToken.None);
+            // Act
+            var result = await _handler!.Handle(command, CancellationToken.None);
 
-            //Assert
-            Assert.IsNotNull(result);
+            // Assert
+            _catRepositoryMock.Verify(repo => repo.GetCatByIdAsync(catId), Times.Once);
+            _catRepositoryMock.Verify(repo => repo.DeleteCatByIdAsync(catId), Times.Once);
+            Assert.That(result, Is.EqualTo(catToDelete));
+        }
+        [Test]
+        public async Task Handle_WhenCatDoesNotExist_ShouldThrowNotFoundException()
+        {
+            // Arrange
+            var catId = Guid.NewGuid();
+            var command = new DeleteCatByIdCommand(catId);
 
-            //Chech That cat has deleted from mock database
-            var deletedCatByIdInDatabase = _mockDatabase.Cats.FirstOrDefault(cat => cat.Id == deleteCatByIdCommand.Id);
-            Assert.IsNull(deletedCatByIdInDatabase);
+            _catRepositoryMock!.Setup(repo => repo.GetCatByIdAsync(catId)).ReturnsAsync((Cat?)null);
+            _catRepositoryMock!.Setup(repo => repo.DeleteCatByIdAsync(catId)).ReturnsAsync((Cat?)null);
+
+            // Act
+            var result = await _handler!.Handle(command, CancellationToken.None);
+
+            // Assert
+            _catRepositoryMock.Verify(repo => repo.GetCatByIdAsync(catId), Times.Once);
+            _catRepositoryMock.Verify(repo => repo.DeleteCatByIdAsync(It.IsAny<Guid>()), Times.Never);
+            Assert.That(result, Is.Null);
         }
     }
 }

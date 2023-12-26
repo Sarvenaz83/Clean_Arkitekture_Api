@@ -4,8 +4,13 @@ using Application.Commands.Dogs.UpdateDog;
 using Application.Dtos;
 using Application.Queries.Dogs.GetAll;
 using Application.Queries.Dogs.GetById;
+using Application.Queries.Dogs.GetDogsByBreed;
+using Application.Queries.Dogs.GetDogsByWeight;
+using Domain.Models.Animal.DogModel;
+using Infrastructure.Database.Database;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -19,6 +24,7 @@ namespace API.Controllers.DogsController
         public DogsController(IMediator mediator)
         {
             _mediator = mediator;
+
         }
 
         // Get all dogs from database
@@ -60,6 +66,22 @@ namespace API.Controllers.DogsController
         public async Task<IActionResult> DeleteDog(Guid dogId)
         {
             return Ok(await _mediator.Send(new DeleteDogByIdCommand(dogId)));
+        }
+
+        //Get dogs by breed
+        [HttpGet]
+        [Route("getDogsByBreed/{breed}")]
+        public async Task<IActionResult> GetDogsByBreed(string breed)
+        {
+            return Ok(await _mediator.Send(new GetDogsByBreedQuery(breed)));
+        }
+
+        //Get dogs by weight
+        [HttpGet]
+        [Route("getDogsByWeight/{weight}")]
+        public async Task<IActionResult> GetDogsByWeight(int weight)
+        {
+            return Ok(await _mediator.Send(new GetDogsByWeightQuery(weight)));
         }
 
     }

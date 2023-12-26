@@ -1,6 +1,8 @@
 ﻿using Application.Queries.Birds.GetById;
-using Application.Queries.Cats.GetById;
+using Domain.Models.Animal.BirdModel;
 using Infrastructure.Database;
+using Infrastructure.Database.Repositories.BirdRepository;
+using Moq;
 
 namespace Test.BirdTests.QueryTest
 {
@@ -8,29 +10,41 @@ namespace Test.BirdTests.QueryTest
     public class GetBirdByIdQueryHandlerTest
     {
         private GetBirdByIdQueryHandler _handler;
-        private MockDatabase _mockDatabase;
+        private Mock<IBirdRepository> _mockBirdRepository;
 
         [SetUp]
         public void SetUp()
         {
             // Initialize the handler and mock database before each test
-            _mockDatabase = new MockDatabase();
-            _handler = new GetBirdByIdQueryHandler(_mockDatabase);
+            _mockBirdRepository = new Mock<IBirdRepository>();
+            _handler = new GetBirdByIdQueryHandler(_mockBirdRepository.Object);
         }
         [Test]
-        public async Task Handle_ValidId_ReturnsCorrectBird()
+        public async Task Handle_ReturnsBirds_WhenBirdExists()
         {
             // Arrange
-            var birdId = new Guid("98765432-6543-6789-9867-987654567890");
+            Guid birdId = Guid.NewGuid();
+            Bird expectedBird = new Bird { Id = birdId, Name = "TestBird" };
 
-            var query = new GetBirdByIdQuery(birdId);
+            _mockBirdRepository.Setup(birdRepository => birdRepository.GetBirdByIdAsync(birdId)).ReturnsAsync(expectedBird);
 
             // Act
-            var result = await _handler.Handle(query, CancellationToken.None);
+            Bird actualBird = await _handler.Handle(new GetBirdByIdQuery(birdId), CancellationToken.None);
 
             // Assert
-            Assert.NotNull(result);
-            Assert.That(result.Id, Is.EqualTo(birdId));
+            Assert.That(actualBird, Is.EqualTo(expectedBird));
+        }
+
+        [Test]
+        public void Handle_ThrowsKeyNotFoundException_WhenBirdDoesNotExist()
+        {
+            // Arrange
+            Guid birdId = Guid.NewGuid();
+
+            _mockBirdRepository.Setup(birdRepository => birdRepository.GetBirdByIdAsync(birdId)).ReturnsAsync((Bird?)null);
+
+            // Act & Assert
+            Assert.ThrowsAsync<KeyNotFoundException>(() => _handler.Handle(new GetBirdByIdQuery(birdId), CancellationToken.None));
         }
     }
 }

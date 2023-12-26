@@ -1,26 +1,27 @@
-﻿using Domain.Models;
+﻿using Domain.Models.Animal.CatModel;
 using Infrastructure.Database;
+using Infrastructure.Database.Repositories.CatRepository;
 using MediatR;
 
 namespace Application.Commands.Cats.DeleteCat
 {
     public class DeleteCatByIdCommandHandler : IRequestHandler<DeleteCatByIdCommand, Cat>
     {
-        private readonly MockDatabase _mockDatabase;
+        private readonly ICatRepository _catRepository;
 
-        public DeleteCatByIdCommandHandler(MockDatabase mockDatabase)
+        public DeleteCatByIdCommandHandler(ICatRepository catRepository)
         {
-            _mockDatabase = mockDatabase;
+            _catRepository = catRepository ?? throw new ArgumentNullException(nameof(catRepository));
         }
-        public Task<Cat> Handle(DeleteCatByIdCommand request, CancellationToken cancellationToken)
+        public async Task<Cat> Handle(DeleteCatByIdCommand request, CancellationToken cancellationToken)
         {
-            Cat catToDelete = _mockDatabase.Cats.FirstOrDefault(cat => cat.Id == request.Id)!;
+            var catToDelete = await _catRepository!.GetCatByIdAsync(request.Id);
             if (catToDelete != null)
             {
-                _mockDatabase.Cats.Remove(catToDelete);
-                return Task.FromResult(catToDelete);
+                await _catRepository!.DeleteCatByIdAsync(request.Id);
+                return catToDelete;
             }
-            return Task.FromResult<Cat>(null);
+            return null!;
         }
     }
 }
