@@ -12,7 +12,7 @@ namespace Application.Commands.Dogs.UpdateDog
             Id = id;
         }
 
-        public DogDto UpdatedDog { get; }
+        public DogDto UpdatedDog { get; set; }
         public Guid Id { get; }
     }
 }

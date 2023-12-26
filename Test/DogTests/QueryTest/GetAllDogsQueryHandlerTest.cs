@@ -1,7 +1,6 @@
 ﻿using Application.Queries.Dogs;
 using Application.Queries.Dogs.GetAll;
 using Domain.Models.Animal.DogModel;
-using Infrastructure.Database;
 using Infrastructure.Database.Repositories.DogRepository;
 using Moq;
 
@@ -10,8 +9,8 @@ namespace Test.DogTests.QueryTest
     [TestFixture]
     public class GetAllDogsQueryHandlerTest
     {
-        private Mock<IDogRepository> _mockDogRepository;
-        private GetAllDogsQueryHandler _handler;
+        private Mock<IDogRepository>? _mockDogRepository;
+        private GetAllDogsQueryHandler? _handler;
 
         [SetUp]
         public void SetUp()
@@ -33,10 +32,10 @@ namespace Test.DogTests.QueryTest
                 new Dog { Id = Guid.NewGuid(), Name = "Oscar" },
             };
 
-            _mockDogRepository.Setup(repo => repo.GetAllDogsAsync()).ReturnsAsync(expectedDogs);
+            _mockDogRepository!.Setup(repo => repo.GetAllDogsAsync()).ReturnsAsync(expectedDogs);
 
             //Act
-            List<Dog> actualDogs = await _handler.Handle(new GetAllDogsQuery(), CancellationToken.None);
+            List<Dog> actualDogs = await _handler!.Handle(new GetAllDogsQuery(), CancellationToken.None);
 
             //Assert
             Assert.That(actualDogs, Is.EqualTo(expectedDogs));

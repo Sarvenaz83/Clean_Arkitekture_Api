@@ -19,6 +19,42 @@ namespace Infrastructure.Database.Repositories.CatRepository
         {
             return await _context.Cats.FirstOrDefaultAsync(cat => cat.Id == id);
         }
+        public async Task<Cat?> CreateCatAsync(Cat cat)
+        {
+            _context.Cats.Add(cat);
+            await _context.SaveChangesAsync();
+            return cat;
+        }
+        public async Task<Cat?> UpdateCatByIdAsync(Guid id)
+        {
+            var cat = await _context.Cats.FirstOrDefaultAsync(cat => cat.Id == id);
+            if (cat == null)
+            {
+                return null;
+            }
+            _context.Cats.Update(cat);
+            await _context.SaveChangesAsync();
+            return cat;
+        }
+        public async Task<Cat?> DeleteCatByIdAsync(Guid id)
+        {
+            var cat = await _context.Cats.FirstOrDefaultAsync(cat => cat.Id == id);
+            if (cat == null)
+            {
+                return null;
+            }
+            _context.Cats.Remove(cat);
+            await _context.SaveChangesAsync();
+            return cat;
+        }
+        public async Task<List<Cat>> GetCatsByBreedAsync(string breed)
+        {
+            return await _context.Cats.Where(cat => cat.Breed == breed).ToListAsync();
+        }
+        public async Task<List<Cat>> GetCatsByWeightAsync(int weight)
+        {
+            return await _context.Cats.Where(cat => cat.Weight == weight).ToListAsync();
+        }
 
     }
 }

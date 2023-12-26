@@ -1,6 +1,9 @@
 ﻿using Application.Dtos;
 using Domain;
+using Domain.Models;
+using Infrastructure.Database.Database;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -12,14 +15,13 @@ namespace API.Controllers.UserController
     [ApiController]
     public class UserController : ControllerBase
     {
-        public static User user = new User();
-        private readonly IConfiguration _configuration;
+        private readonly MyAppDbContext _context;
 
-        public UserController(IConfiguration configuration)
+        public UserController(MyAppDbContext context)
         {
-            _configuration = configuration;
+            _context = context;
         }
-
+        
         [HttpPost("register")]
         public ActionResult<User> Register(UserDto request)
         {
@@ -69,5 +71,56 @@ namespace API.Controllers.UserController
             var tokenHandler = new JwtSecurityTokenHandler();
             return tokenHandler.WriteToken(token);
         }
+        
+        // GET: api/User
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        {
+            return await _context.Users.Include(_user => _user.UserAnimals).ThenInclude(_userAnimal => _userAnimal.Animal).ToListAsync();
+        }
+
+        //Post: api/User/{userId}/Animals/{animalId}
+        [HttpPost("{userId}/Animals/{animalId}")]
+        public async Task<ActionResult> PostUserAnimal(Guid userId, Guid animalId)
+        {
+            var userAnimal = new UserAnimal { UserId = userId, AnimalId = animalId };
+            _context.UserAnimals.Add(userAnimal);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetUserAnimal", new { id = userAnimal.UserId }, userAnimal);
+        }
+
+        // PUT: api/Users/{userId}/Animals/{animalId}
+        [HttpPut("{userId}/Animals/{animalId}")]
+        public async Task<IActionResult> PutUserAnimal(Guid userId, Guid animalId, UserAnimal userAnimal)
+        {
+            if (userId != userAnimal.UserId || animalId != userAnimal.AnimalId)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(userAnimal).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        //DELETE: api/Users/{userId}/Animals/{animalId}
+        [HttpDelete("{userId}/Animals/{animalId}")]
+        public async Task<IActionResult> DeleteUserAnimal(Guid userId, Guid animalId)
+        {
+            var userAnimal = await _context.UserAnimals.FindAsync(userId, animalId);
+            if (userAnimal == null)
+            {
+                return NotFound();
+            }
+
+            _context.UserAnimals.Remove(userAnimal);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+
     }
 }
