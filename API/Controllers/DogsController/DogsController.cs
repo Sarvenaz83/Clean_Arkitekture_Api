@@ -6,12 +6,9 @@ using Application.Queries.Dogs.GetAll;
 using Application.Queries.Dogs.GetById;
 using Application.Queries.Dogs.GetDogsByBreed;
 using Application.Queries.Dogs.GetDogsByWeight;
-using Domain.Models.Animal.DogModel;
-using Infrastructure.Database.Database;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -48,7 +45,7 @@ namespace API.Controllers.DogsController
         // Create a new dog 
         [HttpPost]
         [Route("addNewDog")]
-        [Authorize(Roles = "User")]
+        [Authorize(Policy = "Admin")]
         public async Task<IActionResult> AddDog([FromBody] DogDto newDog)
         {
             return Ok(await _mediator.Send(new AddDogCommand(newDog)));

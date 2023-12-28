@@ -10,7 +10,11 @@ namespace Application.Validators.Bird
             RuleFor(bird => bird.Name)
                 .NotEmpty().WithMessage("{PropertyName} is required.")
                 .NotNull()
-                .MaximumLength(100).WithMessage("{PropertyName} must not exceed 100 characters.");
+                .MaximumLength(12).WithMessage("{PropertyName} must not exceed 100 characters.");
+            RuleFor(bird => bird.CanFly)
+                .NotEmpty().WithMessage("{PropertyName} is required.")
+                .NotNull();
+
 
             RuleFor(bird => bird.Color)
                 .NotEmpty().WithMessage("{PropertyName} is required.")

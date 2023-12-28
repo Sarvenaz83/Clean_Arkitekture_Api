@@ -15,6 +15,7 @@ namespace Application.Queries.Birds.GetAll
         public async Task<List<Bird>> Handle(GetAllBirdsQuery request, CancellationToken cancellationToken)
         {
             List<Bird> allBirdsFromMYAppDbContext = await _birdRepository.GetAllBirdsAsync();
+            List<Bird> sortedBirds = allBirdsFromMYAppDbContext.OrderBy(bird => bird.Name).ToList();
             return allBirdsFromMYAppDbContext;
         }
     }
