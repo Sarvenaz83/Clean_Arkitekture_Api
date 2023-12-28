@@ -6,8 +6,13 @@ namespace Application.Validators
     {
         public GuidValidator()
         {
+            Validate();
+        }
+        public void Validate()
+        {
             RuleFor(guid => guid)
                 .NotEmpty().WithMessage("Guid should not be empty.")
+                .NotNull().WithMessage("Guid should not be null.")
                 .NotEqual(Guid.Empty).WithMessage("Guid should not be empty.");
 
         }

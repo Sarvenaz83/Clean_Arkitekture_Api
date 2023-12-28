@@ -1,6 +1,4 @@
-﻿using Application.Commands.Cats.AddCat;
-using Domain.Models.Animal.BirdModel;
-using Infrastructure.Database;
+﻿using Domain.Models.Animal.BirdModel;
 using Infrastructure.Database.Repositories.BirdRepository;
 using MediatR;
 
