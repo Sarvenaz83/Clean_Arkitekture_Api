@@ -6,6 +6,7 @@ using Application.Queries.Birds.GetAll;
 using Application.Queries.Birds.GetByColor;
 using Application.Queries.Birds.GetById;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers.BirdsCntroller
@@ -54,6 +55,7 @@ namespace API.Controllers.BirdsCntroller
         //Create a new bird
         [HttpPost]
         [Route("addNewBird")]
+        [Authorize(Policy = "Admin")]
         public async Task<IActionResult> AddBird([FromBody] BirdDto newBird)
         {
             try
@@ -69,6 +71,7 @@ namespace API.Controllers.BirdsCntroller
         //Update a specific Bird
         [HttpPut]
         [Route("updateBird/{updatedBirdId}")]
+        [Authorize(Policy = "Admin")]
         public async Task<IActionResult> UpdateBird([FromBody] BirdDto updatedBird, Guid updatedBirdId)
         {
             try
@@ -84,6 +87,7 @@ namespace API.Controllers.BirdsCntroller
         //Delete a bird by Id
         [HttpDelete]
         [Route("deleteBird/{deleteBirdById}")]
+        [Authorize(Policy = "Admin")]
         public async Task<IActionResult> DeleteBird(Guid birdId)
         {
             try
