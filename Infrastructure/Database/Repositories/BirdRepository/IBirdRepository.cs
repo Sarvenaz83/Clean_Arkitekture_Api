@@ -10,6 +10,5 @@ namespace Infrastructure.Database.Repositories.BirdRepository
         Task<Bird?> UpdateBirdByIdAsync(Guid id);
         Task<Bird?> DeleteBirdByIdAsync(Guid id);
         Task<Bird?> GetBirdsByColor(Bird bird);
-        ICollection<Bird?> Birds { get; }
     }
 }

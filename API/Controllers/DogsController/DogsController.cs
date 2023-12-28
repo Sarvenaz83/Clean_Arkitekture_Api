@@ -9,6 +9,7 @@ using Application.Queries.Dogs.GetDogsByWeight;
 using Domain.Models.Animal.DogModel;
 using Infrastructure.Database.Database;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -47,6 +48,7 @@ namespace API.Controllers.DogsController
         // Create a new dog 
         [HttpPost]
         [Route("addNewDog")]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> AddDog([FromBody] DogDto newDog)
         {
             return Ok(await _mediator.Send(new AddDogCommand(newDog)));
@@ -55,6 +57,7 @@ namespace API.Controllers.DogsController
         // Update a specific dog
         [HttpPut]
         [Route("updateDog/{updatedDogId}")]
+        [Authorize(Policy = "Admin")]
         public async Task<IActionResult> UpdateDog([FromBody] DogDto updatedDog, Guid updatedDogId)
         {
             return Ok(await _mediator.Send(new UpdateDogByIdCommand(updatedDog, updatedDogId)));
@@ -63,6 +66,7 @@ namespace API.Controllers.DogsController
         //Delete a dog by Id
         [HttpDelete]
         [Route("deleteDog/{deleteDogById}")]
+        [Authorize(Policy = "Admin")]
         public async Task<IActionResult> DeleteDog(Guid dogId)
         {
             return Ok(await _mediator.Send(new DeleteDogByIdCommand(dogId)));

@@ -4,13 +4,16 @@ using Domain.Models.Animal;
 using Domain.Models.Animal.BirdModel;
 using Domain.Models.Animal.CatModel;
 using Domain.Models.Animal.DogModel;
+using Infrastructure.Database.DatabaseSeedAnimal;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Database.Database
 {
     public class MyAppDbContext : DbContext
     {
-        public MyAppDbContext() { }
+        public MyAppDbContext()
+        {
+        }
 
         public MyAppDbContext(DbContextOptions<MyAppDbContext> options) : base(options)
         {
@@ -24,7 +27,8 @@ namespace Infrastructure.Database.Database
         public virtual DbSet<UserAnimal> UserAnimals { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=MINAZ\\SQLEXPRESS; Database=CleanArkitektureAPI; Trusted_Connection=true; TrustServerCertificate=true;");
+            string connectionString = "Server=MINAZ\\SQLEXPRESS; Database=CleanArkitektureAPI; Trusted_Connection=true; TrustServerCertificate=true;";
+            optionsBuilder.UseSqlServer(connectionString);
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -71,6 +75,8 @@ namespace Infrastructure.Database.Database
                 .Property(cat => cat.Breed);
             modelBuilder.Entity<Cat>()
                 .Property(cat => cat.Weight);
+
+            AnimalSeeder.SeedAnimals(modelBuilder);
 
 
         }

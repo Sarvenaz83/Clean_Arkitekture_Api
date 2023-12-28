@@ -51,6 +51,5 @@ namespace Infrastructure.Database.Repositories.BirdRepository
         {
             return await _context.Birds.FirstOrDefaultAsync(bird => bird.Color == bird.Color);
         }
-        public ICollection<Bird> Birds { get; private set; }
     }
 }

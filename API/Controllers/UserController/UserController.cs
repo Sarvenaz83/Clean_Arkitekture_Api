@@ -1,125 +1,122 @@
-﻿using Application.Dtos;
+﻿using Application.Commands.Users.Delete;
+using Application.Commands.Users.Register;
+using Application.Commands.Users.Update;
+using Application.Dtos.User;
+using Application.Dtos.Validation;
+using Application.Exceptions.Authorize;
+using Application.Queries.Users;
+using Application.Queries.Users.GetAllUsersQuery;
+using Application.Queries.Users.GetById;
+using Application.Queries.Users.LoginUsers;
+using Application.Validators.Bird;
+using Application.Validators.Cat;
+using Application.Validators.DogValidator;
+using Application.Validators.User;
 using Domain;
 using Domain.Models;
 using Infrastructure.Database.Database;
+using Infrastructure.Database.Repositories.UserRepository;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace API.Controllers.UserController
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
-        private readonly MyAppDbContext _context;
+        internal readonly IMediator? _mediator;
 
-        public UserController(MyAppDbContext context)
+        public UserController(IMediator mediator)
         {
-            _context = context;
-        }
-        
-        [HttpPost("register")]
-        public ActionResult<User> Register(UserDto request)
-        {
-            string password = BCrypt.Net.BCrypt.HashPassword(request.Password);
-
-            user.Username = request.Username;
-            user.Password = password;
-
-            return Ok(user);
+            _mediator = mediator;
         }
 
-        [HttpPost("login")]
-        public ActionResult<User> Login(UserDto request)
-        {
-            if (user.Username != request.Username)
-            {
-                return BadRequest("User not found");
-            }
-
-            if (!BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
-            {
-                return BadRequest("Password is wrong!");
-            }
-            string token = GenerateJWTToken(user);
-            return Ok(token);
-        }
-
-        private string GenerateJWTToken(User user)
-        {
-            List<Claim> claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, user.Username),
-                new Claim(ClaimTypes.Role, "Admin"),
-            };
-
-            var key = Encoding.ASCII.GetBytes(
-                _configuration["JWTToken:Token"]!);
-
-
-            var token = new JwtSecurityToken
-            (
-                claims: claims,
-                expires: DateTime.UtcNow.AddHours(1),
-                signingCredentials: new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            );
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            return tokenHandler.WriteToken(token);
-        }
-        
-        // GET: api/User
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        [Route("getAllUsers")]
+        public async Task<ActionResult> GetAllUsers()
         {
-            return await _context.Users.Include(_user => _user.UserAnimals).ThenInclude(_userAnimal => _userAnimal.Animal).ToListAsync();
-        }
-
-        //Post: api/User/{userId}/Animals/{animalId}
-        [HttpPost("{userId}/Animals/{animalId}")]
-        public async Task<ActionResult> PostUserAnimal(Guid userId, Guid animalId)
-        {
-            var userAnimal = new UserAnimal { UserId = userId, AnimalId = animalId };
-            _context.UserAnimals.Add(userAnimal);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetUserAnimal", new { id = userAnimal.UserId }, userAnimal);
-        }
-
-        // PUT: api/Users/{userId}/Animals/{animalId}
-        [HttpPut("{userId}/Animals/{animalId}")]
-        public async Task<IActionResult> PutUserAnimal(Guid userId, Guid animalId, UserAnimal userAnimal)
-        {
-            if (userId != userAnimal.UserId || animalId != userAnimal.AnimalId)
+            try
             {
-                return BadRequest();
+                var users = await _mediator!.Send(new GetAllUsersQuery());
+                return users == null ? BadRequest("There are no users in the database") : Ok(users);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal Server Error: {ex.Message}");
+            }
+        }
+        [HttpPost("login")]
+        public async Task<ActionResult> Login([FromBody] LoginRequest? userToLogin)
+        {
+
+            try
+            {
+                var token = await _mediator!.Send(new LoginUserQuery { Username = userToLogin!.Username!, Password = userToLogin!.Password! })!;
+                return userToLogin == null ? BadRequest("Invalid user login data") : Ok(new { Token = token });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal Server Error: {ex.Message}");
             }
 
-            _context.Entry(userAnimal).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
-
-            return NoContent();
         }
 
-        //DELETE: api/Users/{userId}/Animals/{animalId}
-        [HttpDelete("{userId}/Animals/{animalId}")]
-        public async Task<IActionResult> DeleteUserAnimal(Guid userId, Guid animalId)
+        [HttpPost("register")]
+        public async Task<ActionResult> Register([FromBody] UserDto newUser)
         {
-            var userAnimal = await _context.UserAnimals.FindAsync(userId, animalId);
-            if (userAnimal == null)
+
+            try
             {
-                return NotFound();
+                var validationResult = await _mediator!.Send(new RegisterUserCommand(newUser));
+                return newUser == null ? BadRequest("Invalid user registration data") : Ok(validationResult);
             }
-
-            _context.UserAnimals.Remove(userAnimal);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal Server Error: {ex.Message}");
+            }
         }
+
+
+        [HttpPut("updateUser/{updatedUserId}")]
+        [Authorize(Policy = "Admin")]
+        public async Task<ActionResult> UpdateUser([FromRoute] UserDto updatedUser, Guid updatedUserId)
+        {
+            try
+            {
+                var user = await _mediator!.Send(new UpdateUserByIdCommand(updatedUser, updatedUserId));
+                return user == null ? NotFound($"Invalid user id {updatedUserId} for updating.") : Ok(updatedUser);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal Server Error: {ex.Message}");
+            }
+        }
+
+        [HttpDelete]
+        [Route("deleteUser/{deleteUserId}")]
+        [Authorize(Policy = "Admin")]
+        public async Task<ActionResult> DeleteUser(Guid deleteUserId)
+        {
+            try
+            {
+                var result = await _mediator!.Send(new DeletUserByIdCommand(deleteUserId));
+                return result == false ? NotFound($"Invalid user id {deleteUserId} for deleting.") : Ok($"User with Id '{deleteUserId}' has been deleted.");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal Server Error: {ex.Message}");
+            }
+        }
+
 
 
     }
