@@ -1,11 +1,7 @@
-﻿using AutoMapper;
-using Domain;
-using FluentValidation;
-using IdentityServer4.Services;
+﻿using Domain;
 using Infrastructure.Database.Repositories.UserRepository;
 using MediatR;
-using Microsoft.AspNetCore.Http.HttpResults;
-using System.ComponentModel.DataAnnotations;
+
 
 namespace Application.Commands.Users.Register
 {
@@ -22,7 +18,7 @@ namespace Application.Commands.Users.Register
             string hashedPassword = BCrypt.Net.BCrypt.HashPassword(request.NewUser.Password);
             User newUser = new()
             {
-                Id = Guid.NewGuid(),
+                UserId = Guid.NewGuid(),
                 Username = request.NewUser.Username,
                 Password = hashedPassword,
 

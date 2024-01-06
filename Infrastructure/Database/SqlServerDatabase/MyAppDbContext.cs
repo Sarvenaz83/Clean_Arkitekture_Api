@@ -13,6 +13,7 @@ namespace Infrastructure.Database.Database
     {
         public MyAppDbContext()
         {
+
         }
 
         public MyAppDbContext(DbContextOptions<MyAppDbContext> options) : base(options)
@@ -24,6 +25,7 @@ namespace Infrastructure.Database.Database
         public virtual DbSet<Cat> Cats { get; set; }
         public virtual DbSet<Bird> Birds { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<AnimalModel> AnimalModel { get; set; }
         public virtual DbSet<UserAnimal> UserAnimals { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -35,7 +37,7 @@ namespace Infrastructure.Database.Database
             base.OnModelCreating(modelBuilder);
 
             //Set primary key for AnimalModel
-            modelBuilder.Entity<AnimalModel>().HasKey(animal => animal.Id);
+            modelBuilder.Entity<AnimalModel>().HasKey(animal => animal.AnimalId);
 
             //Configuration many-to-many relationship
             modelBuilder.Entity<UserAnimal>().HasKey(_userAnimal => new { _userAnimal.UserId, _userAnimal.AnimalId });
@@ -52,7 +54,7 @@ namespace Infrastructure.Database.Database
 
             //Configure Dog entity
             modelBuilder.Entity<Dog>()
-                .Property(dog => dog.Name);
+                .Property(dog => dog.AnimalName);
             modelBuilder.Entity<Dog>()
                 .Property(dog => dog.Breed);
             modelBuilder.Entity<Dog>()
@@ -60,7 +62,7 @@ namespace Infrastructure.Database.Database
 
             //Configure Bird entity
             modelBuilder.Entity<Bird>()
-                .Property(bird => bird.Name);
+                .Property(bird => bird.AnimalName);
             modelBuilder.Entity<Bird>()
                 .Property(bird => bird.Color);
             modelBuilder.Entity<Bird>()
@@ -68,7 +70,7 @@ namespace Infrastructure.Database.Database
 
             //Configure Cat entity
             modelBuilder.Entity<Cat>()
-                .Property(cat => cat.Name);
+                .Property(cat => cat.AnimalName);
             modelBuilder.Entity<Cat>()
                 .Property(cat => cat.LikesToPlay);
             modelBuilder.Entity<Cat>()

@@ -2,16 +2,17 @@
 
 namespace API.Helpers
 {
+    /*
     public class SecretKeyHelpers
     {
         public static byte[] GetSecretKey(IConfiguration configuration)
         {
-            var secretKey = configuration["JwtSettings:SecretKey"];
+            var secretKey = configuration["SecretKey"];
             if (string.IsNullOrEmpty(secretKey))
             {
                 throw new InvalidOperationException("JwtSettings: SecretKey is missing or invalid in appsettings.json.");
             }
-            return Encoding.ASCII.GetBytes(secretKey);
+            return Encoding.ASCII.GetBytes(JwtSettings["secretKey);
         }
         public static string GetSecretConnectionString(IConfiguration configuration)
         {
@@ -23,4 +24,5 @@ namespace API.Helpers
             return secretConnectionString;
         }
     }
+    */
 }

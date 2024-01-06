@@ -16,13 +16,15 @@ namespace API.Authentication
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(secretKey),
                     ValidateIssuer = false,
                     ValidateAudience = false,
                     ValidateLifetime = true,
 
-                    IssuerSigningKey = new SymmetricSecurityKey(secretKey),
+
                 };
             });
+
 
             return services;
 

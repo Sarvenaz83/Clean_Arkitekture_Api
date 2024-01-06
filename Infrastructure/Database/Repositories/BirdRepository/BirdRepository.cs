@@ -17,7 +17,7 @@ namespace Infrastructure.Database.Repositories.BirdRepository
         }
         public async Task<Bird?> GetBirdByIdAsync(Guid id)
         {
-            return await _context.Birds.FirstOrDefaultAsync(bird => bird.Id == id);
+            return await _context.Birds.FirstOrDefaultAsync(bird => bird.AnimalId == id);
         }
         public async Task<Bird?> CreateBirdAsync(Bird bird)
         {
@@ -27,7 +27,7 @@ namespace Infrastructure.Database.Repositories.BirdRepository
         }
         public async Task<Bird?> UpdateBirdByIdAsync(Guid id)
         {
-            Bird? birdToUpdate = await _context.Birds.FirstOrDefaultAsync(bird => bird.Id == id);
+            Bird? birdToUpdate = await _context.Birds.FirstOrDefaultAsync(bird => bird.AnimalId == id);
             if (birdToUpdate != null)
             {
                 _context.Birds.Update(birdToUpdate);
@@ -38,7 +38,7 @@ namespace Infrastructure.Database.Repositories.BirdRepository
         }
         public async Task<Bird?> DeleteBirdByIdAsync(Guid id)
         {
-            Bird? birdToDelete = await _context.Birds.FirstOrDefaultAsync(bird => bird.Id == id);
+            Bird? birdToDelete = await _context.Birds.FirstOrDefaultAsync(bird => bird.AnimalId == id);
             if (birdToDelete != null)
             {
                 _context.Birds.Remove(birdToDelete);

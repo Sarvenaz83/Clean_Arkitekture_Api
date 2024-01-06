@@ -9,6 +9,7 @@ namespace Application.Commands.Birds.AddBird
         public AddBirdCommand(BirdDto newBird)
         {
             NewBird = newBird;
+
         }
 
         public BirdDto NewBird { get; }
