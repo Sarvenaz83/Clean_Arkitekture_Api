@@ -32,7 +32,7 @@ namespace Test.CatTests.CommandTest
             _catRepositoryMock!.Setup(repo => repo.CreateCatAsync(It.IsAny<Cat>()))
                 .Callback<Cat>(cat => createdCat = new CatDto
                 {
-                    Name = cat.Name,
+                    Name = cat.AnimalName,
                     LikesToPlay = cat.LikesToPlay,
                     Breed = cat.Breed,
                     Weight = cat.Weight
@@ -43,7 +43,7 @@ namespace Test.CatTests.CommandTest
 
             //Assert
             Assert.That(result, Is.Not.Null);
-            Assert.That(result.Name, Is.EqualTo(catDto.Name));
+            Assert.That(result.AnimalName, Is.EqualTo(catDto.Name));
             Assert.That(result.LikesToPlay, Is.EqualTo(catDto.LikesToPlay));
             Assert.That(result.Breed, Is.EqualTo(catDto.Breed));
         }

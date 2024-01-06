@@ -24,7 +24,7 @@ namespace Test.DogTests.QueryTest
         {
             // Arrange
             Guid guid = Guid.NewGuid();
-            Dog expectedDog = new Dog { Id = guid, Name = "TestDog" };
+            Dog expectedDog = new Dog { AnimalId = guid, AnimalName = "TestDog" };
 
             _mockDogRepository!.Setup(dogRepository => dogRepository.GetDogByIdAsync(guid)).ReturnsAsync(expectedDog);
 

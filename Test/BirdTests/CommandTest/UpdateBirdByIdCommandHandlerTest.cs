@@ -25,7 +25,7 @@ namespace Test.BirdTests.CommandTest
         {
             //Arrenge
             var birdId = Guid.NewGuid();
-            var birdToUpdate = new Bird { Id = birdId, Name = "Test", CanFly = true };
+            var birdToUpdate = new Bird { AnimalId = birdId, AnimalName = "Test", CanFly = true };
             var updatedBirdDto = new BirdDto { Name = "Updated", CanFly = false, Color = "UpdatedColor" };
             var command = new UpdateBirdByIdCommand(birdId, updatedBirdDto);
             _birdRepositoryMock!.Setup(repo => repo.GetBirdByIdAsync(birdId)).ReturnsAsync(birdToUpdate);

@@ -24,7 +24,7 @@ namespace Test.BirdTests.CommandTest
         {
             // Arrange
             var birdId = Guid.NewGuid();
-            var birdToDelete = new Bird { Id = birdId, Name = "Test", CanFly = true };
+            var birdToDelete = new Bird { AnimalId = birdId, AnimalName = "Test", CanFly = true };
             var command = new DeleteBirdByIdCommand(birdId);
 
             _birdRepositoryMock!.Setup(repo => repo.GetBirdByIdAsync(birdId)).ReturnsAsync(birdToDelete);

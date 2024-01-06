@@ -31,7 +31,7 @@ namespace Test.BirdTests.CommandTest
             _birdRepositoryMock!.Setup(repo => repo.CreateBirdAsync(It.IsAny<Bird>()))
                 .Callback<Bird>(bird => createdBird = new BirdDto
                 {
-                    Name = bird.Name,
+                    Name = bird.AnimalName,
                     CanFly = bird.CanFly,
                     Color = bird.Color
                 });
@@ -42,7 +42,7 @@ namespace Test.BirdTests.CommandTest
             //Assert
             _birdRepositoryMock.Verify(repo => repo.CreateBirdAsync(It.IsAny<Bird>()), Times.Once);
             Assert.That(result, Is.Not.Null);
-            Assert.That(result.Name, Is.EqualTo(birdDto.Name));
+            Assert.That(result.AnimalName, Is.EqualTo(birdDto.Name));
             Assert.That(result.CanFly, Is.EqualTo(birdDto.CanFly));
             Assert.That(result.Color, Is.EqualTo(birdDto.Color));
         }

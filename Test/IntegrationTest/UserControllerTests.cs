@@ -15,7 +15,7 @@ namespace Test.IntegrationTest
         {
             // Arrange
             var mockMediator = new Mock<IMediator>();
-            var users = new List<UserModel> { new UserModel(), new UserModel() };
+            var users = new List<User>();
             mockMediator.Setup(mediator => mediator.Send(It.IsAny<GetAllUsersQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(users);
             var controller = new UserController(mockMediator.Object);
@@ -26,8 +26,8 @@ namespace Test.IntegrationTest
             // Assert
             Assert.That(result, Is.InstanceOf<OkObjectResult>());
             var okResult = result as OkObjectResult;
-            Assert.That(okResult!.Value, Is.InstanceOf<List<UserModel>>());
-            Assert.That(okResult.Value as List<UserModel>, Is.EqualTo(users));
+            Assert.That(okResult!.Value, Is.InstanceOf<List<User>>());
+            Assert.That(okResult.Value as List<User>, Is.EqualTo(users));
         }
 
     }

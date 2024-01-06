@@ -25,7 +25,7 @@ namespace Test.CatTests.CommandTest
         {
             //Arrenge
             var catId = Guid.NewGuid();
-            var catToUpdate = new Cat { Id = catId, Name = "Test", LikesToPlay = true, Breed = "TestCatBreed", Weight = 6 };
+            var catToUpdate = new Cat { AnimalId = catId, AnimalName = "Test", LikesToPlay = true, Breed = "TestCatBreed", Weight = 6 };
             var updatedCatDto = new CatDto { Name = "Updated", LikesToPlay = false, Breed = "UpdatedBreed", Weight = 8 };
             var command = new UpdateCatByIdCommand(updatedCatDto, catId);
             _catRepository!.Setup(repo => repo.GetCatByIdAsync(catId)).ReturnsAsync(catToUpdate);

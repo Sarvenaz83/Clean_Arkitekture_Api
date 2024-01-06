@@ -110,7 +110,7 @@ namespace API.Controllers.BirdsCntroller
                 return BadRequest(birdValidator.Errors.ConvertAll(errors => errors.ErrorMessage));
             }
 
-            var bird = await _mediator.Send(new UpdateBirdByIdCommand(updatedBird, updatedBirdId));
+            var bird = await _mediator.Send(new UpdateBirdByIdCommand(updatedBirdId, updatedBird));
 
             if (bird == null)
             {

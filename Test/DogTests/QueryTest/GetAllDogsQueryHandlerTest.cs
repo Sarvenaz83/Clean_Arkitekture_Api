@@ -25,11 +25,11 @@ namespace Test.DogTests.QueryTest
             //Arrange
             List<Dog> expectedDogs = new List<Dog>
             {
-                new Dog { Id = Guid.NewGuid(), Name = "Nonika" },
-                new Dog { Id = Guid.NewGuid(), Name = "Mandy" },
-                new Dog { Id = Guid.NewGuid(), Name = "Alex" },
-                new Dog { Id = Guid.NewGuid(), Name = "Pettibell" },
-                new Dog { Id = Guid.NewGuid(), Name = "Oscar" },
+                new Dog { AnimalId = Guid.NewGuid(), AnimalName = "Nonika" },
+                new Dog { AnimalId = Guid.NewGuid(), AnimalName = "Mandy" },
+                new Dog { AnimalId = Guid.NewGuid(), AnimalName = "Alex" },
+                new Dog { AnimalId = Guid.NewGuid(), AnimalName = "Pettibell" },
+                new Dog { AnimalId = Guid.NewGuid(), AnimalName = "Oscar" },
             };
 
             _mockDogRepository!.Setup(repo => repo.GetAllDogsAsync()).ReturnsAsync(expectedDogs);

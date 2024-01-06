@@ -24,7 +24,7 @@ namespace Test.BirdTests.QueryTest
         {
             // Arrange
             Guid birdId = Guid.NewGuid();
-            Bird expectedBird = new Bird { Id = birdId, Name = "TestBird" };
+            Bird expectedBird = new Bird { AnimalId = birdId, AnimalName = "TestBird" };
 
             _mockBirdRepository.Setup(birdRepository => birdRepository.GetBirdByIdAsync(birdId)).ReturnsAsync(expectedBird);
 

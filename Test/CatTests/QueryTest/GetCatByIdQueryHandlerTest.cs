@@ -8,8 +8,8 @@ namespace Test.CatTests.QueryTest
     [TestFixture]
     public class GetCatByIdQueryHandlerTest
     {
-        private Mock<ICatRepository> _mockCatRepository;
-        private GetCatByIdQueryHandler _handler;
+        private Mock<ICatRepository>? _mockCatRepository;
+        private GetCatByIdQueryHandler? _handler;
 
         [SetUp]
         public void SetUp()
@@ -23,12 +23,12 @@ namespace Test.CatTests.QueryTest
         {
             // Arrange
             Guid catId = Guid.NewGuid();
-            Cat expectedCat = new Cat { Id = catId, Name = "TestCat" };
+            Cat expectedCat = new Cat { AnimalId = catId, AnimalName = "TestCat" };
 
-            _mockCatRepository.Setup(catRepository => catRepository.GetCatByIdAsync(catId)).ReturnsAsync(expectedCat);
+            _mockCatRepository!.Setup(catRepository => catRepository.GetCatByIdAsync(catId)).ReturnsAsync(expectedCat);
 
             // Act 
-            Cat actualCat = await _handler.Handle(new GetCatByIdQuery(catId), CancellationToken.None);
+            Cat actualCat = await _handler!.Handle(new GetCatByIdQuery(catId), CancellationToken.None);
 
             //Assert
             Assert.That(actualCat, Is.EqualTo(expectedCat));
@@ -40,10 +40,10 @@ namespace Test.CatTests.QueryTest
             // Arrange
             Guid catId = Guid.NewGuid();
 
-            _mockCatRepository.Setup(catRepository => catRepository.GetCatByIdAsync(catId)).ReturnsAsync((Cat?)null);
+            _mockCatRepository!.Setup(catRepository => catRepository.GetCatByIdAsync(catId)).ReturnsAsync((Cat?)null);
 
             // Act & Assert
-            Assert.ThrowsAsync<KeyNotFoundException>(() => _handler.Handle(new GetCatByIdQuery(catId), CancellationToken.None));
+            Assert.ThrowsAsync<KeyNotFoundException>(() => _handler!.Handle(new GetCatByIdQuery(catId), CancellationToken.None));
         }
 
     }
