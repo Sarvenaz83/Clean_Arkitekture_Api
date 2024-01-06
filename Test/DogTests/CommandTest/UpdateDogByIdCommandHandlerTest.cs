@@ -25,7 +25,7 @@ namespace Test.DogTests.CommandTest
         {
             //Arrange
             var dogId = Guid.NewGuid();
-            var dogToUpdate = new Dog { Id = dogId, Name = "Test", Breed = "TestBreed", Weight = 6 };
+            var dogToUpdate = new Dog { AnimalId = dogId, AnimalName = "Test", Breed = "TestBreed", Weight = 6 };
             var updatedDogDto = new DogDto { Name = "Updated", Breed = "UpdatedBreed", Weight = 10 };
 
             var command = new UpdateDogByIdCommand(updatedDogDto, dogId);

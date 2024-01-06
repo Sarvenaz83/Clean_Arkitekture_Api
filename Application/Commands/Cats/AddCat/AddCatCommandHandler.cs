@@ -19,8 +19,8 @@ namespace Application.Commands.Cats.AddCat
         {
             Cat catToCreate = new()
             {
-                Id = Guid.NewGuid(),
-                Name = request.NewCat.Name,
+                AnimalId = Guid.NewGuid(),
+                AnimalName = request.NewCat.Name,
                 LikesToPlay = request.NewCat.LikesToPlay,
                 Breed = request.NewCat.Breed,
                 Weight = request.NewCat.Weight

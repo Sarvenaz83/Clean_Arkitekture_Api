@@ -2,30 +2,12 @@
 using Application.Commands.Users.Register;
 using Application.Commands.Users.Update;
 using Application.Dtos.User;
-using Application.Dtos.Validation;
-using Application.Exceptions.Authorize;
-using Application.Queries.Users;
 using Application.Queries.Users.GetAllUsersQuery;
-using Application.Queries.Users.GetById;
 using Application.Queries.Users.LoginUsers;
-using Application.Validators.Bird;
-using Application.Validators.Cat;
-using Application.Validators.DogValidator;
-using Application.Validators.User;
 using Domain;
-using Domain.Models;
-using Infrastructure.Database.Database;
-using Infrastructure.Database.Repositories.UserRepository;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace API.Controllers.UserController
 {
@@ -54,6 +36,7 @@ namespace API.Controllers.UserController
                 return StatusCode(500, $"Internal Server Error: {ex.Message}");
             }
         }
+
         [HttpPost("login")]
         public async Task<ActionResult> Login([FromBody] LoginRequest? userToLogin)
         {

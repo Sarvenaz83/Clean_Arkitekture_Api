@@ -51,7 +51,7 @@ namespace API.Controllers.CatsController
         //Create a new cat
         [HttpPost]
         [Route("addNewCat")]
-        [Authorize(Policy = "Admin")]
+        //[Authorize(Policy = "Admin")]
         public async Task<IActionResult> AddCat([FromBody] CatDto newCat)
         {
             try
@@ -67,7 +67,7 @@ namespace API.Controllers.CatsController
         //Update a specific Cat
         [HttpPut]
         [Route("updateCat/{updatedCatId}")]
-        [Authorize(Policy = "Admin")]
+        //[Authorize(Policy = "Admin")]
         public async Task<IActionResult> UpdateCat([FromBody] CatDto updatedCat, Guid updatedCatId)
         {
             try
@@ -83,7 +83,7 @@ namespace API.Controllers.CatsController
         //Delete a cat by Id
         [HttpDelete]
         [Route("deleteCat/{deleteCatById}")]
-        [Authorize(Policy = "Admin")]
+        //[Authorize(Policy = "Admin")]
         public async Task<IActionResult> DeleteCat(Guid catId)
         {
             try

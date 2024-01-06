@@ -12,5 +12,6 @@ namespace Application.Dtos
         [Required]
         [StringLength(50)]
         public string Color { get; set; } = string.Empty;
+
     }
 }

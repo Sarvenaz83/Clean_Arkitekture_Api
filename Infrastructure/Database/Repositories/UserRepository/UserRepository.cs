@@ -36,14 +36,14 @@ namespace Infrastructure.Database.Repositories.UserRepository
         {
             try
             {
-                _logger!.Information($"Updating user with Id: {userToUpdate.Id}");
+                _logger!.Information($"Updating user with Id: {userToUpdate.UserId}");
                 _context!.Users.Update(userToUpdate);
                 await _context.SaveChangesAsync();
                 _logger.Information($"User with Id: {userToUpdate} has been updated");
             }
             catch (Exception e)
             {
-                _logger!.Error(e, $"An error occured while updating user with Id: {userToUpdate.Id}");
+                _logger!.Error(e, $"An error occured while updating user with Id: {userToUpdate.UserId}");
             }
         }
         public async Task DeleteUserByIdAsync(Guid userToDeleteId)

@@ -8,8 +8,8 @@ namespace Test.BirdTests.QueryTest
     [TestFixture]
     public class GetAllBirdsQueryHandlerTest
     {
-        private Mock<IBirdRepository> _mockBirdRepository;
-        private GetAllBirdsQueryHandler _handler;
+        private Mock<IBirdRepository>? _mockBirdRepository;
+        private GetAllBirdsQueryHandler? _handler;
 
         [SetUp]
         public void SetUp()
@@ -24,18 +24,18 @@ namespace Test.BirdTests.QueryTest
             //Arrange
             List<Bird> expectedBirds = new List<Bird>
             {
-                new Bird { Id = Guid.NewGuid(), Name = "Fench" },
-                new Bird { Id = Guid.NewGuid(), Name = "Owl" },
-                new Bird { Id = Guid.NewGuid(), Name = "LittePitte" },
-                new Bird { Id = Guid.NewGuid(), Name = "LovlyBoy" },
-                new Bird { Id = Guid.NewGuid(), Name = "Tittu" },
+                new Bird { AnimalId = Guid.NewGuid(), AnimalName = "Fench" },
+                new Bird { AnimalId = Guid.NewGuid(), AnimalName = "Owl" },
+                new Bird { AnimalId = Guid.NewGuid(), AnimalName = "LittePitte" },
+                new Bird { AnimalId = Guid.NewGuid(), AnimalName = "LovlyBoy" },
+                new Bird { AnimalId = Guid.NewGuid(), AnimalName = "Tittu" },
             };
 
-            _mockBirdRepository.Setup(repo => repo.GetAllBirdsAsync()).ReturnsAsync(expectedBirds);
+            _mockBirdRepository!.Setup(repo => repo.GetAllBirdsAsync()).ReturnsAsync(expectedBirds);
 
 
             //Act
-            List<Bird> actualBirds = await _handler.Handle(new GetAllBirdsQuery(), CancellationToken.None);
+            List<Bird> actualBirds = await _handler!.Handle(new GetAllBirdsQuery(), CancellationToken.None);
 
             //Assert
             Assert.That(actualBirds, Is.EqualTo(expectedBirds));

@@ -18,7 +18,7 @@ namespace Infrastructure.Database.Repositories.DogRepository
         }
         public async Task<Dog?> GetDogByIdAsync(Guid id)
         {
-            return await _context.Dogs.FirstOrDefaultAsync(dog => dog.Id == id);
+            return await _context.Dogs.FirstOrDefaultAsync(dog => dog.AnimalId == id);
         }
         public async Task<Dog?> CreateDogAsync(Dog dog)
         {
@@ -29,7 +29,7 @@ namespace Infrastructure.Database.Repositories.DogRepository
         }
         public async Task<Dog?> UpdateDogByIdAsync(Guid id)
         {
-            Dog? dogToUpdate = await _context.Dogs.FirstOrDefaultAsync(dog => dog.Id == id);
+            Dog? dogToUpdate = await _context.Dogs.FirstOrDefaultAsync(dog => dog.AnimalId == id);
             if (dogToUpdate != null)
             {
                 _context.Dogs.Update(dogToUpdate);
@@ -40,7 +40,7 @@ namespace Infrastructure.Database.Repositories.DogRepository
         }
         public async Task<Dog?> DeleteDogByIdAsync(Guid id)
         {
-            Dog? dogToDelete = await _context.Dogs.FirstOrDefaultAsync(dog => dog.Id == id);
+            Dog? dogToDelete = await _context.Dogs.FirstOrDefaultAsync(dog => dog.AnimalId == id);
             if (dogToDelete != null)
             {
                 _context.Dogs.Remove(dogToDelete);

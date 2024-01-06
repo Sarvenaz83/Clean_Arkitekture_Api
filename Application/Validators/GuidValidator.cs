@@ -4,10 +4,6 @@ namespace Application.Validators
 {
     public class GuidValidator : AbstractValidator<Guid>
     {
-        public GuidValidator()
-        {
-            Validate();
-        }
         public void Validate()
         {
             RuleFor(guid => guid)

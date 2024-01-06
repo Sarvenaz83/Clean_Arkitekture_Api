@@ -15,7 +15,7 @@ namespace Test.IntegrationTest
         {
             // Arrange
             var mockMediator = new Mock<IMediator>();
-            var users = new List<User> { new User(), new User() };
+            var users = new List<User>();
             mockMediator.Setup(mediator => mediator.Send(It.IsAny<GetAllUsersQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(users);
             var controller = new UserController(mockMediator.Object);

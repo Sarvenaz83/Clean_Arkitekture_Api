@@ -1,7 +1,6 @@
 ﻿using Application.Commands.Dogs;
 using Application.Dtos;
 using Domain.Models.Animal.DogModel;
-using Infrastructure.Database;
 using Infrastructure.Database.Repositories.DogRepository;
 using Moq;
 
@@ -31,7 +30,7 @@ namespace Test.DogTests.CommandTest
             _dogRepositoryMock!.Setup(repo => repo.CreateDogAsync(It.IsAny<Dog>()))
                 .Callback<Dog>(dog => createdDog = new DogDto
                 {
-                    Name = dog.Name,
+                    Name = dog.AnimalName,
                     Breed = dog.Breed,
                     Weight = dog.Weight
                 });
@@ -42,7 +41,7 @@ namespace Test.DogTests.CommandTest
             //Assert
             _dogRepositoryMock.Verify(repo => repo.CreateDogAsync(It.IsAny<Dog>()), Times.Once);
             Assert.That(result, Is.Not.Null);
-            Assert.That(result.Name, Is.EqualTo(dogDto.Name));
+            Assert.That(result.AnimalName, Is.EqualTo(dogDto.Name));
             Assert.That(result.Breed, Is.EqualTo(dogDto.Breed));
             Assert.That(result.Weight, Is.EqualTo(dogDto.Weight));
         }

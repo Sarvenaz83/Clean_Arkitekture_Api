@@ -1,8 +1,5 @@
 ﻿using Application.Commands.Dogs.DeleteDog;
-using Application.Queries.Cats.GetCatsByWeight;
-using Domain.Models;
 using Domain.Models.Animal.DogModel;
-using Infrastructure.Database;
 using Infrastructure.Database.Repositories.DogRepository;
 using Moq;
 
@@ -25,7 +22,7 @@ namespace Test.DogTests.CommandTest
         {
             //Arrange
             var dogId = Guid.NewGuid();
-            var dogToDelete = new Dog { Id = dogId, Name = "Test", Breed = "TestBreedDog", Weight = 8 };
+            var dogToDelete = new Dog { AnimalId = dogId, AnimalName = "Test", Breed = "TestBreedDog", Weight = 8 };
             var command = new DeleteDogByIdCommand(dogId);
 
             _dogRepositoryMock!.Setup(repo => repo.GetDogByIdAsync(dogId)).ReturnsAsync(dogToDelete);

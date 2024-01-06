@@ -1,15 +1,29 @@
 using API.Authentication;
-using API.Helpers;
+using Microsoft.Extensions.Hosting;
 using Application;
 using Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using API.Swagger;
+using Serilog;
+using System.Text;
+
+
 
 var builder = WebApplication.CreateBuilder(args);
 
-var secretKey = SecretKeyHelpers.GetSecretKey(builder.Configuration);
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .CreateLogger();
+
+
+builder.Configuration.AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+
+
+var jwtSettings = builder.Configuration.GetSection("JwtSettings");
+
+var secretKey = Encoding.ASCII.GetBytes(jwtSettings["SecretKey"]!);
 
 builder.Services.AddMyCustomAuthentication(secretKey);
 
@@ -34,6 +48,7 @@ builder.Services.AddTransient<IConfigureOptions<SwaggerGenOptions>, Configuratio
 
 
 
+
 builder.Services.AddApplication().AddInfrastructure();
 
 
@@ -50,6 +65,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
 
 app.MapControllers();
 

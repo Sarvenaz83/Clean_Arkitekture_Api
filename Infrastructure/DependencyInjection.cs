@@ -1,4 +1,5 @@
 ﻿using Infrastructure.Database.Database;
+using Infrastructure.Database.Repositories.AnimalUserRepository;
 using Infrastructure.Database.Repositories.Authorization;
 using Infrastructure.Database.Repositories.BirdRepository;
 using Infrastructure.Database.Repositories.CatRepository;
@@ -26,9 +27,11 @@ namespace Infrastructure
             services.AddScoped<IBirdRepository, BirdRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IAuthRepository, AuthRepository>();
+            services.AddScoped<IAnimalUserRepository, AnimalUserRepository>();
 
 
             return services;
         }
+
     }
 }

@@ -17,7 +17,7 @@ namespace Infrastructure.Database.Repositories.CatRepository
         }
         public async Task<Cat?> GetCatByIdAsync(Guid id)
         {
-            return await _context.Cats.FirstOrDefaultAsync(cat => cat.Id == id);
+            return await _context.Cats.FirstOrDefaultAsync(cat => cat.AnimalId == id);
         }
         public async Task<Cat?> CreateCatAsync(Cat cat)
         {
@@ -27,7 +27,7 @@ namespace Infrastructure.Database.Repositories.CatRepository
         }
         public async Task<Cat?> UpdateCatByIdAsync(Guid id)
         {
-            var cat = await _context.Cats.FirstOrDefaultAsync(cat => cat.Id == id);
+            var cat = await _context.Cats.FirstOrDefaultAsync(cat => cat.AnimalId == id);
             if (cat == null)
             {
                 return null;
@@ -38,7 +38,7 @@ namespace Infrastructure.Database.Repositories.CatRepository
         }
         public async Task<Cat?> DeleteCatByIdAsync(Guid id)
         {
-            var cat = await _context.Cats.FirstOrDefaultAsync(cat => cat.Id == id);
+            var cat = await _context.Cats.FirstOrDefaultAsync(cat => cat.AnimalId == id);
             if (cat == null)
             {
                 return null;

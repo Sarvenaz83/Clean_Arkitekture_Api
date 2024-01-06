@@ -24,7 +24,7 @@ namespace Test.CatTests.CommandTest
         {
             // Arrange
             var catId = Guid.NewGuid();
-            var catToDelete = new Cat { Id = catId, Name = "Test", LikesToPlay = true, Breed = "TestBreed", Weight = 10 };
+            var catToDelete = new Cat { AnimalId = catId, AnimalName = "Test", LikesToPlay = true, Breed = "TestBreed", Weight = 10 };
             var command = new DeleteCatByIdCommand(catId);
 
             _catRepositoryMock!.Setup(repo => repo.GetCatByIdAsync(catId)).ReturnsAsync(catToDelete);

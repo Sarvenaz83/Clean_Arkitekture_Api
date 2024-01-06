@@ -9,8 +9,8 @@ namespace Test.CatTests.QueryTest
     [TestFixture]
     public class GetAllCatsQueryHandlerTest
     {
-        private Mock<ICatRepository> _mockCatRepository;
-        private GetAllCatsQueryHandler _handler;
+        private Mock<ICatRepository>? _mockCatRepository;
+        private GetAllCatsQueryHandler? _handler;
 
         [SetUp]
         public void SetUp()
@@ -25,17 +25,17 @@ namespace Test.CatTests.QueryTest
             //Arrange
             List<Cat> expectedCats = new List<Cat>
             {
-                new Cat { Id = Guid.NewGuid(), Name = "Sezar" },
-                new Cat { Id = Guid.NewGuid(), Name = "Simba" },
-                new Cat { Id = Guid.NewGuid(), Name = "Misholak" },
-                new Cat { Id = Guid.NewGuid(), Name = "Kattis" },
-                new Cat { Id = Guid.NewGuid(), Name = "Lotta" },
+                new Cat { AnimalId = Guid.NewGuid(), AnimalName = "Sezar" },
+                new Cat { AnimalId = Guid.NewGuid(), AnimalName = "Simba" },
+                new Cat { AnimalId = Guid.NewGuid(), AnimalName = "Misholak" },
+                new Cat { AnimalId = Guid.NewGuid(), AnimalName = "Kattis" },
+                new Cat { AnimalId = Guid.NewGuid(), AnimalName = "Lotta" },
             };
 
-            _mockCatRepository.Setup(repo => repo.GetAllCatsAsync()).ReturnsAsync(expectedCats);
+            _mockCatRepository!.Setup(repo => repo.GetAllCatsAsync()).ReturnsAsync(expectedCats);
 
             //Act
-            List<Cat> actualCats = await _handler.Handle(new GetAllCatsQuery(), CancellationToken.None);
+            List<Cat> actualCats = await _handler!.Handle(new GetAllCatsQuery(), CancellationToken.None);
 
             //Assert
             Assert.That(actualCats, Is.EqualTo(expectedCats));
